@@ -2,14 +2,14 @@
     <option timestep="0.002" gravity="0 0 -9.81" solver="PGS" iterations="50"/>
 
     <worldbody>
-        <geom name="table" type="box" size="2 2 0.1" pos="0 0 -0.1"
+        <geom name="table" type="box" size="5 5 0.1" pos="0 0 -0.1"
               friction="1 0.05 0.01" rgba="1.0 0.8 0.8 1"/>
 
         <light pos="0 0 5"/>
 
-        <site name="target" pos="0.6 0.2 0.3" size="0.05" rgba="0 1 0 0.5"/>
+        <site name="target" pos="0 2 0.3" size="0.05" rgba="0 1 0 0.5"/>
 
-        <body name="eraser" pos="0.6 0.2 0.05">
+        <body name="eraser" pos="0 2 0.05">
             <freejoint/>
             <geom type="box" size="0.05 0.02 0.02" mass="0.07"
                   rgba="1 0.5 0 1" friction="1 0.05 0.01"/>
@@ -17,34 +17,53 @@
 
         <body name="chassis" pos="0 0 0.2">
             <freejoint name = "root"/>
-            <geom type="box" size="0.3 0.5 0.1" mass="5.0"
+            <geom type="box" size="0.3 0.5 0.1" mass="10.0"
                   rgba="0.5 0.5 0.5 1"/>
+            
+            <body name = "fr" pos = "0.32 0.4 -0.05">
+                <joint name = "fr_wheel" type = "hinge" axis = "1 0 0" damping = "0.1" armature = "0.01"/>
+                <geom type = "cylinder" size = "0.12 0.03" euler="0 90 0" mass = "0.4" friction="1.5 0.1 0.02" rgba = "0.1 0.1 0.1 1"/>
+            </body>
+
+            <body name = "fl" pos = "0.32 -0.4 -0.05">
+                <joint name = "fl_wheel" type = "hinge" axis = "1 0 0" damping = "0.1" armature = "0.01"/>
+                <geom type = "cylinder" size = "0.12 0.03" euler="0 90 0" mass = "0.4" friction="1.5 0.1 0.02" rgba = "0.1 0.1 0.1 1"/>
+            </body>
+
+            <body name = "br" pos = "-0.32 0.4 -0.05">
+                <joint name = "br_wheel" type = "hinge" axis = "1 0 0" damping = "0.1" armature = "0.01"/>
+                <geom type = "cylinder" size = "0.12 0.03" euler="0 90 0" mass = "0.4" friction="1.5 0.1 0.02" rgba = "0.1 0.1 0.1 1"/>
+            </body>
+
+            <body name = "bl" pos = "-0.32 -0.4 -0.05">
+                <joint name = "bl_wheel" type = "hinge" axis = "1 0 0" damping = "0.1" armature = "0.01"/>
+                <geom type = "cylinder" size = "0.12 0.03" euler="0 90 0" mass = "0.4" friction="1.5 0.1 0.02" rgba = "0.1 0.1 0.1 1"/>
+            </body>
 
             <body name="upper_arm" pos="0 0.5 0.1">
                 <joint name="shoulder" type="hinge" damping="0.1"
-                       armature="0.01" axis="0 1 0" range="-1.57 1.57"/>
+                       armature="0.01" axis="1 0 0" range="0 3.14"/>
                 <geom type="capsule" size="0.04"
-                      fromto="0 0 0 0 0 0.5" mass="0.50" rgba="1 0 0 1"/>
+                      fromto="0 0 0 0 0 0.3" mass="1.0" rgba="1 0 0 1"/>
 
-                <body name="forearm" pos="0 0 0.5">
+                <body name="forearm" pos="0 0 0.3">
                     <joint name="elbow" type="hinge" damping="0.1"
                            armature="0.01" axis="0 1 0" range="-1.57 1.57"/>
-                    <geom type="capsule" size="0.03"
-                          fromto="0 0 0 0 0 0.4" mass="0.30" rgba="0 1 0 1"/>
+                    <geom type="capsule" size="0.03" fromto="0 0 0 0 0.3 0.2" mass="0.30" rgba="0 1 0 1"/>
 
-                    <body name="hand" pos="0 0 0.4">
+                    <body name="hand" pos="0 0.3 0.2">
+                        
                         <site name="pinch_point" pos="0 0 0.05" size="0.01"/>
-
                         <body name="finger_l" pos="0.04 0 0.05">
                             <joint name="f_l" type="hinge" damping="1.0"
-                                   armature="0.01" axis="1 0 0" range="0 0.6"/>
+                                   armature="0.01" axis="0 -1 0" range="0 1.57"/>
                             <geom type="box" size="0.01 0.02 0.08" mass="0.02"
                                   rgba="0.5 0.5 0.5 1"/>
                         </body>
 
                         <body name="finger_r" pos="-0.04 0 0.05">
                             <joint name="f_r" type="hinge" damping="1.0"
-                                   armature="0.01" axis="-1 0 0" range="0 0.6"/>
+                                   armature="0.01" axis="0 1 0" range="0 1.57"/>
                             <geom type="box" size="0.01 0.02 0.08" mass="0.02"
                                   rgba="0.5 0.5 0.5 1"/>
                         </body>
@@ -55,9 +74,13 @@
     </worldbody>
 
     <actuator>
-        <position joint="shoulder" gear="2.3" kp="20" kv="4"/>
+        <position joint="shoulder" gear="2.3" kp="15" kv="3"/>
         <position joint="elbow"    gear="2.3" kp="15" kv="3"/>
         <position joint="f_l"      gear="1.2" kp="8"  kv="2"/>
         <position joint="f_r"      gear="1.2" kp="8"  kv="2"/>
+        <velocity joint = "fr_wheel" gear = "0.5" kv = "1"/>
+        <velocity joint = "fl_wheel" gear = "0.5" kv = "1"/>
+        <velocity joint = "br_wheel" gear = "0.5" kv = "1"/>
+        <velocity joint = "bl_wheel" gear = "0.5" kv = "1"/>
     </actuator>
 </mujoco>
