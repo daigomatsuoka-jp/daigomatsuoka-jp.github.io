@@ -13,7 +13,6 @@ with mujoco.viewer.launch_passive(model, data) as viewer:
         
         # 2. CALCULATE DISTANCE (Day 12 Reward Logic)
         dist = np.linalg.norm(hand_pos - eraser_pos)
-        
         # 3. APPLY CONTROL
         # Logic: If far, stay open. If close, pinch!
         mujoco.mj_step(model, data)
